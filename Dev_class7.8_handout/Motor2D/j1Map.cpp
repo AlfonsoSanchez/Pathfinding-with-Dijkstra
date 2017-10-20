@@ -76,10 +76,8 @@ void j1Map::PropagateDijkstra()
 	
 	if (frontier.Pop(curr))
 	{
-		int current = visited.find(curr);
+		int current = visited.find(curr); 
 		iPoint last = breadcrumbs[current];
-
-		int newCost = MovementCost(last.x, last.y);
 
 		iPoint neighbors[4];
 		neighbors[0].create(curr.x + 1, curr.y + 0);
