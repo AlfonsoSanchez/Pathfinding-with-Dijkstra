@@ -156,7 +156,7 @@ private:
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
-
+	bool patfinding = false;
 	/// BFS
 	p2PQueue<iPoint>	frontier;
 	p2List<iPoint>		visited;

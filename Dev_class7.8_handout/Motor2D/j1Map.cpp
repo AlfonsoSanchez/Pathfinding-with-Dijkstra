@@ -79,37 +79,46 @@ void j1Map::PropagateDijkstra()
 	// use the 2 dimensional array "cost_so_far" to track the accumulated costs
 	// on each cell (is already reset to 0 automatically)
 	iPoint curr;
-
+	
 		if (frontier.Pop(curr))
 		{
 
 			int current = visited.find(curr);
 			iPoint last = breadcrumbs[current];
 
-			iPoint neighbors[4];
-			neighbors[0].create(curr.x + 1, curr.y + 0);
-			neighbors[1].create(curr.x + 0, curr.y + 1);
-			neighbors[2].create(curr.x - 1, curr.y + 0);
-			neighbors[3].create(curr.x + 0, curr.y - 1);
-
-			for (uint i = 0; i < 4; ++i)
+			if ((path[0].x != visited[current].x || path[0].y != visited[current].y) && patfinding == false)
 			{
-				if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
-				{
 
-					if (visited.find(neighbors[i]) == -1)
+				iPoint neighbors[4];
+				neighbors[0].create(curr.x + 1, curr.y + 0);
+				neighbors[1].create(curr.x + 0, curr.y + 1);
+				neighbors[2].create(curr.x - 1, curr.y + 0);
+				neighbors[3].create(curr.x + 0, curr.y - 1);
+
+				for (uint i = 0; i < 4; ++i)
+				{
+					if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
 					{
 
-						cost_so_far[neighbors[i].x][neighbors[i].y] = cost_so_far[last.x][last.y] + MovementCost(neighbors[i].x, neighbors[i].y);
-						frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
-						visited.add(neighbors[i]);
-						breadcrumbs.add(curr);
+						if (visited.find(neighbors[i]) == -1)
+						{
+							cost_so_far[neighbors[i].x][neighbors[i].y] = cost_so_far[last.x][last.y] + MovementCost(neighbors[i].x, neighbors[i].y);
+							frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
+							visited.add(neighbors[i]);
+							breadcrumbs.add(curr);
+
+						}
 					}
 				}
 			}
+			else
+			{
+				patfinding = true;
+			}
 		}
+	}
 	
-}
+
 
 int j1Map::MovementCost(int x, int y) const
 {
