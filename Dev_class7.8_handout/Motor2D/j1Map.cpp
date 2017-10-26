@@ -48,7 +48,7 @@ void j1Map::ResetPath()
 void j1Map::Path(int x, int y)
 {
 	path.Clear();
-
+	patfinding = false;
 	iPoint goal = WorldToMap(x, y);
 	int current = visited.find(goal);
 	if (current != -1)
@@ -76,50 +76,53 @@ void j1Map::PropagateAstar()
 
 	iPoint curr;
 	
-	
-	if (frontier.Pop(curr))
+	if (patfinding == false)
 	{
 
-		int current = visited.find(curr);
-		iPoint last = breadcrumbs[current];
-		uint distance = sqrt(pow(last.x-path[0].x,2)+pow(last.y-path[0].y,2));
-		if (last.x != path[0].x && last.y != path[0].y)
+		if (frontier.Pop(curr))
 		{
-			if ((path[0].x != visited[current].x || path[0].y != visited[current].y) && patfinding == false)
+
+			int current = visited.find(curr);
+			iPoint last = breadcrumbs[current];
+			int distance = sqrt(pow(last.x - path[0].x, 2) + pow(last.y - path[0].y, 2));
+			if (last.x != path[0].x || last.y != path[0].y)
 			{
-
-				iPoint neighbors[4];
-				neighbors[0].create(curr.x + 1, curr.y + 0);
-				neighbors[1].create(curr.x + 0, curr.y + 1);
-				neighbors[2].create(curr.x - 1, curr.y + 0);
-				neighbors[3].create(curr.x + 0, curr.y - 1);
-
-				for (uint i = 0; i < 4; ++i)
+				if ((path[0].x != visited[current].x || path[0].y != visited[current].y))
 				{
-					uint distance2 = sqrt(pow(neighbors[i].x - path[0].x, 2) + pow(neighbors[i].y - path[0].y, 2));
-					if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
+
+					iPoint neighbors[4];
+					neighbors[0].create(curr.x + 1, curr.y + 0);
+					neighbors[1].create(curr.x + 0, curr.y + 1);
+					neighbors[2].create(curr.x - 1, curr.y + 0);
+					neighbors[3].create(curr.x + 0, curr.y - 1);
+
+					for (uint i = 0; i < 4; ++i)
 					{
-
-						if (visited.find(neighbors[i]) == -1)
+						int distance2 = sqrt(pow(neighbors[i].x - path[0].x, 2) + pow(neighbors[i].y - path[0].y, 2));
+						if (MovementCost(neighbors[i].x, neighbors[i].y) > 0)
 						{
-							if (distance2 <= distance/* && (last.x + path[0].x >= neighbors[i].x + path[0].x && last.y  +path[0].y >= neighbors[i].y - path[0].y)|| (last.x + path[0].x <= neighbors[i].x + path[0].x && last.y + path[0].y <= neighbors[i].y + path[0].y)*/)
-							{
-								cost_so_far[neighbors[i].x][neighbors[i].y] = /*cost_so_far[last.x][last.y] + MovementCost(neighbors[i].x, neighbors[i].y) +*/ distance2;
-								frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
-								visited.add(neighbors[i]);
-								breadcrumbs.add(curr);
-							}
 
+							if (visited.find(neighbors[i]) == -1)
+							{
+								if (distance2 <= distance)
+								{
+									cost_so_far[neighbors[i].x][neighbors[i].y] =  distance2;
+									frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
+									visited.add(neighbors[i]);
+									breadcrumbs.add(curr);
+								}
+
+							}
 						}
 					}
 				}
+				else
+				{
+					patfinding = true;
+				}
 			}
-			else
-			{
-				patfinding = true;
-			}
+			
 		}
-		
 	}
 }
 
