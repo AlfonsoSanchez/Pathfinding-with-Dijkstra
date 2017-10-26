@@ -126,17 +126,8 @@ public:
 
 	iPoint MapToWorld(int x, int y) const;
 	iPoint WorldToMap(int x, int y) const;
-
-	// Pathfinding
-	int MovementCost(int x, int y) const;
-	void ResetPath();
-	void DrawPath();
-	void Path(int x, int y);
-
-	// Propagation style
-	void PropagateBFS();
-	void PropagateDijkstra();
-	void PropagateAstar();
+	TileSet* GetTilesetFromTileId(int id) const;
+	
 private:
 
 	bool LoadMap();
@@ -145,7 +136,7 @@ private:
 	bool LoadLayer(pugi::xml_node& node, MapLayer* layer);
 	bool LoadProperties(pugi::xml_node& node, Properties& properties);
 
-	TileSet* GetTilesetFromTileId(int id) const;
+	
 
 public:
 
@@ -156,14 +147,8 @@ private:
 	pugi::xml_document	map_file;
 	p2SString			folder;
 	bool				map_loaded;
-	bool patfinding = false;
-	/// BFS
-	p2PQueue<iPoint>	frontier;
-	p2List<iPoint>		visited;
-	p2List<iPoint>		breadcrumbs;
-	uint				cost_so_far[COST_MAP][COST_MAP];
-	p2DynArray<iPoint>	path;
-	SDL_Texture*		tile_x = nullptr;
+	
+	
 };
 
 #endif // __j1MAP_H__

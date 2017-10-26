@@ -7,6 +7,7 @@
 #include "j1Render.h"
 #include "j1Window.h"
 #include "j1Map.h"
+#include "j1Pathfinding.h"
 #include "j1Scene.h"
 
 j1Scene::j1Scene() : j1Module()
@@ -63,31 +64,31 @@ bool j1Scene::Update(float dt)
 		App->render->camera.x -= 1;
 
 	if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
-		App->map->ResetPath();
+		App->path->ResetPath();
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-		App->map->PropagateBFS();
+		App->path->PropagateBFS();
 
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_REPEAT)
-		App->map->PropagateBFS();
+		App->path->PropagateBFS();
 
 	if (App->input->GetKey(SDL_SCANCODE_J) == KEY_DOWN)
-		App->map->PropagateDijkstra();
+		App->path->PropagateDijkstra();
 
 	if (App->input->GetKey(SDL_SCANCODE_K) == KEY_REPEAT)
-		App->map->PropagateDijkstra();
+		App->path->PropagateDijkstra();
 
 	if (App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN)
-		App->map->PropagateAstar();
+		App->path->PropagateAstar();
 
 	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT)
-		App->map->PropagateAstar();
+		App->path->PropagateAstar();
 
 	if (App->input->GetMouseButtonDown(1) == KEY_DOWN)
 	{
 		iPoint p;
 		App->input->GetMousePosition(p.x, p.y);
-		App->map->Path(p.x - App->render->camera.x, p.y - App->render->camera.y);
+		App->path->Path(p.x - App->render->camera.x, p.y - App->render->camera.y);
 	}
 
 	App->map->Draw();
