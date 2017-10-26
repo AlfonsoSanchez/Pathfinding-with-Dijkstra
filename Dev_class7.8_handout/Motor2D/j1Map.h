@@ -136,7 +136,7 @@ public:
 	// Propagation style
 	void PropagateBFS();
 	void PropagateDijkstra();
-
+	void PropagateAstar();
 private:
 
 	bool LoadMap();
