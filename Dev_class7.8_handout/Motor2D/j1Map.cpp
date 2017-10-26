@@ -82,7 +82,7 @@ void j1Map::PropagateAstar()
 
 		int current = visited.find(curr);
 		iPoint last = breadcrumbs[current];
-		int distance = sqrt(pow(last.x-path[0].x,2)+pow(last.y-path[0].y,2));
+		uint distance = sqrt(pow(last.x-path[0].x,2)+pow(last.y-path[0].y,2));
 		if (last.x != path[0].x && last.y != path[0].y)
 		{
 			if ((path[0].x != visited[current].x || path[0].y != visited[current].y) && patfinding == false)
@@ -96,15 +96,15 @@ void j1Map::PropagateAstar()
 
 				for (uint i = 0; i < 4; ++i)
 				{
-					int distance2 = sqrt(pow(neighbors[i].x - path[0].x, 2) + pow(neighbors[i].y - path[0].y, 2));
+					uint distance2 = sqrt(pow(neighbors[i].x - path[0].x, 2) + pow(neighbors[i].y - path[0].y, 2));
 					if (MovementCost(neighbors[i].x, neighbors[i].y) >= 0)
 					{
 
 						if (visited.find(neighbors[i]) == -1)
 						{
-							if (distance2 < distance && last.x - path[0].x >= neighbors[i].x - path[0].x && last.y - path[0].y >= neighbors[i].y - path[0].y)
+							if (distance2 <= distance/* && (last.x + path[0].x >= neighbors[i].x + path[0].x && last.y  +path[0].y >= neighbors[i].y - path[0].y)|| (last.x + path[0].x <= neighbors[i].x + path[0].x && last.y + path[0].y <= neighbors[i].y + path[0].y)*/)
 							{
-								cost_so_far[neighbors[i].x][neighbors[i].y] = /*cost_so_far[last.x][last.y] +*/ MovementCost(neighbors[i].x, neighbors[i].y) + distance2;
+								cost_so_far[neighbors[i].x][neighbors[i].y] = /*cost_so_far[last.x][last.y] + MovementCost(neighbors[i].x, neighbors[i].y) +*/ distance2;
 								frontier.Push(neighbors[i], cost_so_far[neighbors[i].x][neighbors[i].y]);
 								visited.add(neighbors[i]);
 								breadcrumbs.add(curr);
@@ -119,10 +119,7 @@ void j1Map::PropagateAstar()
 				patfinding = true;
 			}
 		}
-		else
-		{
-			frontier.Clear();
-		}
+		
 	}
 }
 
